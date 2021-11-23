@@ -1,6 +1,5 @@
 name: 'fetchGodot'
 description: 'Load godot engine and export templates'
 runs:
-  using: 'docker'
   image: 'Dockerfile'
   entrypoint: '/entrypoint.sh'

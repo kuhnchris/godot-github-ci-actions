@@ -21,11 +21,4 @@ jobs:
       uses: ./main/.github/actions/fetchGodot
       env:
         GODOT_VERSION: 3.4
-       
-    - name: "Build project..."
-      id: buildprojectgodot
-      env:
-        BASE_DIR: main/example_project
-        DEBUG: false
-      run: |
-       cd main && ../godot* --export x11 ../export .
+      
