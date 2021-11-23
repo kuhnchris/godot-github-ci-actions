@@ -9,4 +9,4 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   env:
-    GODOT_VERSION=${{ inputs.godot-version }}
+    - GODOT_VERSION=${{ inputs.godot-version }}
