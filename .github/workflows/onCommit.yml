@@ -1,0 +1,29 @@
+name: Conversion & build job(s)
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Coverting & setting live
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        ref: main
+        path: main
+    - name: Fetch godot version
+      id: fetchGodot
+      uses: ./.github/actions/fetchGodot
+      env:
+        GODOT_VERSION: 3.4
+       
+    - name: "Build project..."
+      id: buildprojectgodot
+      env:
+        BASE_DIR: main/example_project
+        DEBUG: false
+      run: |
+       cd main && ../godot* --export x11 ../export .
