@@ -19,7 +19,7 @@ wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT
 unzip app.zip
 chmod +x godot*
 mkdir ~/.local/share/godot/templates -p
-tar xf templ.tpz
+unzip templ.tpz
 mv templates ~/.local/share/godot/${GODOT_VERSION}.stable
 
 #set +v +x
