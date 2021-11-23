@@ -1,6 +1,7 @@
 #!/bin/sh
 targetDir=$GITHUB_WORKSPACE
 #set -v -x
+GODOT_VERSION=$1
 
 if [ "$GODOT_VERSION" == "" ]; then
     echo "no Godot Version defined. cannot proceed."

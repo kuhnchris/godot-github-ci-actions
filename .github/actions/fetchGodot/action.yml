@@ -1,12 +1,12 @@
 name: 'fetchGodot'
 description: 'Load godot engine and export templates'
 inputs:
-  godot-version:  # id of input
+  godot-version: 
     description: 'Godot Version to use'
     required: true
     default: '3.4'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  env:
-    - GODOT_VERSION=${{ inputs.godot-version }}
+  args:
+    - ${{ inputs.godot-version }}
