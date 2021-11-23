@@ -1,6 +1,11 @@
 #!/bin/sh
-targetDir="/github/workspace/"
+targetDir=$GITHUB_WORKSPACE
 #set -v -x
+
+if [ "$GODOT_VERSION" == "" ]; then
+    echo "no Godot Version defined. cannot proceed."
+    exit 2
+fi  
 
 cd $targetDir;
 if [ "$BASE_DIR" != "" ]; then
