@@ -1,4 +1,3 @@
-
 #!/bin/sh
 targetDir="/github/workspace/"
 #set -v -x

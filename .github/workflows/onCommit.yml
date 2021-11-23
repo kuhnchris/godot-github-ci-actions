@@ -14,9 +14,11 @@ jobs:
       with:
         ref: main
         path: main
+        token: ${{ secrets.MY_TOKEN || github.token }}
+
     - name: Fetch godot version
       id: fetchGodot
-      uses: ./.github/actions/fetchGodot
+      uses: ./main/.github/actions/fetchGodot
       env:
         GODOT_VERSION: 3.4
        
