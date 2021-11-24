@@ -1,10 +1,16 @@
 #!/bin/bash
 #set -v -x
 echo "::group::Debugging information:"
-ldd Godot*
-ls -alh
+echo "workdir:"
 pwd
+echo "os info:"
 uname -a
+echo "Godot executable lib dependencies"
+ldd Godot*
+echo "current workdir listing:"
+ls -alh
+echo "command line:"
+echo $@
 echo "::endgroup::"
 
 targetDir=${GITHUB_WORKSPACE}
