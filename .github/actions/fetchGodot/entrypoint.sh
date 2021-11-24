@@ -2,7 +2,7 @@
 targetDir=$GITHUB_WORKSPACE
 #set -v -x
 GODOT_VERSION=$1
-
+echo "::debug::running with parameters: $GITHUB_WORKSPACE - $GODOT_VERSION" 
 if [ "$GODOT_VERSION" == "" ]; then
     echo "no Godot Version defined. cannot proceed."
     exit 2
