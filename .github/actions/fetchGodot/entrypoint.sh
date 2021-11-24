@@ -2,8 +2,8 @@
 #set -v -x
 targetDir=${GITHUB_WORKSPACE}
 GODOT_VERSION=$1
-TEMPLATE_TARGET=${TEMPLATE_TARGET}/${GODOT_VERSION}.stable
 TEMPLATE_BASE=~/.local/share/godot/templates
+TEMPLATE_TARGET=${TEMPLATE_BASE}/${GODOT_VERSION}.stable
 URL_PREFIX=https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_
 echo "::debug::running with parameters: $GITHUB_WORKSPACE - $GODOT_VERSION" 
 if [ "$GODOT_VERSION" == "" ]; then
