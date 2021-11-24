@@ -23,7 +23,7 @@ jobs:
         godot-version: 3.4
 
     - name: Build release
-      id: 
+      id: exportGodot
       uses: ./main/.github/actions/exportGodotProject
       with:
         export-pack: false
