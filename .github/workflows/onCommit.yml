@@ -26,10 +26,10 @@ jobs:
       id: exportGodot
       uses: ./main/.github/actions/exportGodotProject
       with:
-        export-pack: false
-        export-debug: false
-        export-platform: "Linux/X11"
         project-directory: "./example-project"
+        export-debug: false
+        export-pack: false
+        export-platform: "Linux/X11"
 
     - name: Release
       uses: softprops/action-gh-release@v1
