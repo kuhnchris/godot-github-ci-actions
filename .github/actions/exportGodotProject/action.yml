@@ -14,9 +14,19 @@ inputs:
     required: false
     default: ""
   export-platform:
-    description: "Export platform (from export_presets.cfg)"
+    description: "Export for platform (.pck + .exe)"
     required: false
+    default: "y"
+  platform:
+    description: "Platform to export for (from export_presets.cfg)"
+    required: true
     default: "Linux/X11"
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.project-directory }}
+    - ${{ inputs.export-debug }}
+    - ${{ inputs.export-pack }}
+    - ${{ inputs.export-platform }}
+    - ${{ inputs.platform }}
