@@ -18,7 +18,7 @@ echo "::group::downloading templates... export_templates.tpz"
 wget ${URL_PREFIX}export_templates.tpz -O templ.tpz
 echo "::endgroup::"
 echo "::group::downloading engine... x11.64.zip"
-wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_x11.64.zip -O app.zip
+wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip -O app.zip
 echo "::endgroup::"
 echo "::group::unzipping engine zip file..."
 unzip app.zip
