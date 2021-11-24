@@ -13,18 +13,18 @@ fi
 cd ${targetDir};
 
 echo "::group::using this url prefix: ${URL_PREFIX}"
+echo "::endgroup::"
 echo "::group::downloading templates... export_templates.tpz"
 wget ${URL_PREFIX}export_templates.tpz -O templ.tpz
 echo "::endgroup::"
 echo "::group::downloading engine... x11.64.zip"
 wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_x11.64.zip -O app.zip
 echo "::endgroup::"
-echo "::endgroup::"
 echo "::group::unzipping engine zip file..."
 unzip app.zip
 echo "::endgroup::"
 echo "::group::make engine executable..."
-chmod +x Godot*
+chmod -v +x Godot*
 echo "::endgroup::"
 echo "::group::creating template directory..."
 mkdir ${TEMPLATE_BASE} -p -v

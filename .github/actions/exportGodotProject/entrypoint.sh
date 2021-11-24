@@ -1,5 +1,12 @@
 #!/bin/sh
 #set -v -x
+echo "::group::Debugging information:"
+ldd Godot*
+ls -alh
+pwd
+uname -a
+echo "::endgroup::"
+
 targetDir=${GITHUB_WORKSPACE}
 BASE_DIR=$1
 DEBUG=$2
@@ -29,5 +36,7 @@ if [ "${PLATFORM}x" == "x" ]; then
     godot_args="${godot_args} --export ${PLATFORM} ./export-platform"
 fi
 
+chmod +x Godot*
 ./Godot* ${godot_args} --no-window
+
 #set +v +x
