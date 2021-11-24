@@ -1,5 +1,5 @@
 FROM alpine:latest
-RUN apk add unzip gcompat
+RUN apk add unzip gcompat libbsd
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 0777 /entrypoint.sh
 
