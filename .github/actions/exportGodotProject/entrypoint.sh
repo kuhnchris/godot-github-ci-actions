@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #set -v -x
 echo "::group::Debugging information:"
 ldd Godot*
@@ -10,10 +10,11 @@ echo "::endgroup::"
 targetDir=${GITHUB_WORKSPACE}
 BASE_DIR=$1
 DEBUG=$2
-PACK=3
-PLATFORM=4
+PACK=$3
+PLATFORM=$4
 if [ "$BASE_DIR" != "" ]; then
     targetDir="${GITHUB_WORKSPACE}/${BASE_DIR}/"
+    echo "Using this project directory: ${targetDir}"
 fi
 
 rm -Rf ./export-debug 2>&1| true
@@ -37,6 +38,6 @@ if [ "${PLATFORM}x" == "x" ]; then
 fi
 
 chmod +x Godot*
-./Godot* ${godot_args} --no-window
+./Godot* ${godot_args} --no-window ${targetDir}/project.godot
 
 #set +v +x
