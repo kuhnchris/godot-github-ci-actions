@@ -12,20 +12,28 @@ if [ "$GODOT_VERSION" == "" ]; then
 fi  
 cd ${targetDir};
 
-echo "::debug::using this url prefix: ${URL_PREFIX}"
-echo "downloading templates... export_templates.tpz"
+echo "::group::using this url prefix: ${URL_PREFIX}"
+echo "::group::downloading templates... export_templates.tpz"
 wget ${URL_PREFIX}export_templates.tpz -O templ.tpz
-echo "downloading engine... x11.64.zip"
+echo "::endgroup::"
+echo "::group::downloading engine... x11.64.zip"
 wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_x11.64.zip -O app.zip
-echo "::debug::unzipping engine zip file..."
+echo "::endgroup::"
+echo "::endgroup::"
+echo "::group::unzipping engine zip file..."
 unzip app.zip
-echo "::debug::make engine executable..."
+echo "::endgroup::"
+echo "::group::make engine executable..."
 chmod +x Godot*
-echo "::debug::creating template directory..."
+echo "::endgroup::"
+echo "::group::creating template directory..."
 mkdir ${TEMPLATE_BASE} -p -v
-echo "::debug::unzipping template zip..."
+echo "::endgroup::"
+echo "::group::unzipping template zip..."
 unzip templ.tpz
-echo "::debug::moving templates to ${TEMPLATE_TARGET}"
-mv -v templates ${TEMPLATE_TARGET}
+echo "::endgroup::"
+echo "::group::moving templates to ${TEMPLATE_TARGET}"
+mv -v templates "${TEMPLATE_TARGET}"
+echo "::endgroup::"
 
 #set +v +x

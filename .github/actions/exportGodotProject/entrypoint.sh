@@ -18,15 +18,15 @@ mkdir export-platform
 
 godot_args=""
 if [ "${DEBUG}x" == "x" ]; then
-    godot_args=${godot_args} --export-debug ${PLATFORM} ./export-debug    
+    godot_args="${godot_args} --export-debug ${PLATFORM} ./export-debug"
 fi
 
 if [ "${PACK}x" == "x" ]; then
-    godot_args=${godot_args} --export-pack ${PLATFORM} ./export-pck    
+    godot_args="${godot_args} --export-pack ${PLATFORM} ./export-pck"    
 fi
 
 if [ "${PLATFORM}x" == "x" ]; then
-    godot_args=${godot_args} --export ${PLATFORM} ./export-platform    
+    godot_args="${godot_args} --export ${PLATFORM} ./export-platform"
 fi
 
 ./Godot* ${godot_args} --no-window
