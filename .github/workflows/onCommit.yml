@@ -7,7 +7,7 @@ on: push
 
 jobs:
   build:
-    name: Coverting & setting live
+    name: Loading engine, templates and build project (X11)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -33,10 +33,10 @@ jobs:
 
     - name: Release
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
+      #if: startsWith(github.ref, 'refs/tags/')
       with:
+        body: |
+          This is an automated build for GitHub SHA ${{ github.sha }}
+        tag_name: latest-dev
         files: |
-          ./export-pck
-          ./export-debug
-          ./export-platform
-    
+          ./export-artifacts/*
