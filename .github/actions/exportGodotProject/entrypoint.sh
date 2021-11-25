@@ -26,7 +26,6 @@ if [ "${BASE_DIR}x" != "x" ] && [ "$BASE_DIR" != "false" ]; then
     targetDir="${GITHUB_WORKSPACE}/${BASE_DIR}/"
     echo "Using this project directory: ${targetDir}"
 fi
-
 localExportDirBase=.ci-exports/
 localTargetDirDebug=${localExportDirBase}/export-debug
 localTargetDirPck=${localExportDirBase}/export-pck
@@ -34,6 +33,13 @@ localTargetDirPlatform=${localExportDirBase}/export-platform
 targetDirDebug=${targetDir}/${localTargetDirDebug}/
 targetDirPck=${targetDir}/${localTargetDirPck}/
 targetDirPlatform=${targetDir}/${localTargetDirPlatform}/
+echo "::endgroup::"
+
+
+echo "::group::Linking template directory to proper directory"
+sharedir=~/.local/share/
+mkdir -p ${sharedir}
+ln -s /usr/share/godot ${sharedir}/godot
 echo "::endgroup::"
 
 echo "::group::Cleaning and preparing export directories..."
@@ -68,8 +74,7 @@ fi
 echo "::endgroup::"
 
 godot_args="${godot_args} --no-window ${targetDir}/project.godot --quit"
-execs=(./Godot*)
-
+execs=(/usr/bin/godot)
 chmod +x "${execs[0]}"
 echo "::group::running the engine with following parameters: ${godot_args}"
 "${execs[0]}" ${godot_args} 2>&1 | tee export-artifacts/engine-output.log

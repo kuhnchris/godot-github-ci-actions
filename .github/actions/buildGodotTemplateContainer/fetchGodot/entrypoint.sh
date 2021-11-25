@@ -1,16 +1,16 @@
 #!/bin/sh
 #set -v -x
-targetDir=${GITHUB_WORKSPACE}
+#targetDir=${GITHUB_WORKSPACE}
 GODOT_VERSION=$1
-TEMPLATE_BASE=~/.local/share/godot/templates
+TEMPLATE_BASE=/usr/share/godot/templates
 TEMPLATE_TARGET=${TEMPLATE_BASE}/${GODOT_VERSION}.stable
 URL_PREFIX=https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_
-echo "::debug::running with parameters: $GITHUB_WORKSPACE - $GODOT_VERSION" 
+echo "::debug::running for $GODOT_VERSION..." 
 if [ "$GODOT_VERSION" = "" ]; then
     echo "no Godot Version defined. cannot proceed."
     exit 2
 fi  
-cd "${targetDir}" || exit 2;
+#cd "${targetDir}" || exit 2;
 
 echo "::group::using this url prefix: ${URL_PREFIX}"
 echo "::endgroup::"
@@ -34,6 +34,12 @@ unzip templ.tpz
 echo "::endgroup::"
 echo "::group::moving templates to ${TEMPLATE_TARGET}"
 mv -v templates "${TEMPLATE_TARGET}"
+echo "::endgroup::"
+echo "::group::moving engine to /usr/bin"
+mv -v Godot* /usr/bin/godot
+echo "::endgroup::"
+echo "::group::cleaning up..."
+rm templ.tpz app.zip
 echo "::endgroup::"
 
 #set +v +x

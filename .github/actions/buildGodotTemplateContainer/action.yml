@@ -1,5 +1,5 @@
 name: 'fetchGodot'
-description: 'Load godot engine and export templates'
+description: 'Load godot engine and export templates and prepares docker image'
 inputs:
   godot-version: 
     description: 'Godot Version to use'

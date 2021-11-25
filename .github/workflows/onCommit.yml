@@ -5,9 +5,49 @@ on: push
 #    branches:
 #      - main
 
+env:
+  GODOT_VERSION: 3.4
+  REPO_NAME: godot-github-ci-actions
+
+
 jobs:
-  build:
-    name: Loading engine, templates and build project (X11)
+  checkDockerImage:
+    name: Checking the docker image for godot, or build if not existent
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkForImage
+      name: Check for existing docker image...
+      runs: |
+        result=`docker manifest inspect ghcr.io/${{ github.repository_owner }}/${{ REPO_NAME }}:${{ GODOT_VERSION }}; echo $?`
+        echo ::set-output name=imageExists:${result}
+        if [ ${result} == "0" ];
+          echo "image exists. skipping build..."
+        else
+          echo "image does not exist - building..."
+        fi
+
+    - id: buildImage
+      name: Building docker image...
+      if: steps.checkForImage.output.imageExists != 0
+      uses: ./main/.github/actions/buildGodotTemplateContainer
+      with:
+        godot-version: ${{ GODOT_VERSION }}
+
+    - name: Log in to registry
+      if: steps.checkForImage.output.imageExists != 0
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Push image
+      if: steps.checkForImage.output.imageExists != 0
+      run: |
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/${{ REPO_NAME }}
+        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+        docker tag $REPO_NAME $IMAGE_ID:${{ GODOT_VERSION }}
+        docker push $IMAGE_ID:$VERSION
+
+  buildX11:
+    needs: checkDockerImage
+    name: Build project (X11)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -16,11 +56,10 @@ jobs:
         path: main
         token: ${{ secrets.MY_TOKEN || github.token }}
 
-    - name: Fetch godot version
-      id: fetchGodot
-      uses: ./main/.github/actions/fetchGodot
-      with:
-        godot-version: 3.4
+    - name: Modify GODOT_VERSION in Dockerfile...
+      id: dockerfileEnrichment
+      runs: |
+        sed 's/${{ GODOT_VERSION }}/'${{ GODOT_VERSION }}'/g' -i ./main/.github/actions/exportGodotProject/Dockerfile
 
     - name: Build release
       id: exportGodot
@@ -31,6 +70,7 @@ jobs:
         export-pack: false
         export-platform: "Linux/X11"
         executable-name: "example-project"
+
     - name: Release
       uses: softprops/action-gh-release@v1
       #if: startsWith(github.ref, 'refs/tags/')
