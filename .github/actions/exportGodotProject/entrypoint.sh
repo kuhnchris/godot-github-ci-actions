@@ -50,7 +50,7 @@ echo "::endgroup::"
 echo "::group::Evaluating input variables..."
 godot_args=""
 ziping=""
-zippostfix="$(date "+automated_build-%Y.%m.%d-%H:%M:%S")-$GITHUB_REF"
+zippostfix="$(date "+automated_build-%Y.%m.%d-%H%M%S")-$GITHUB_SHA"
 if [ "${DEBUG}x" != "x" ] && [ "${DEBUG}x" != "falsex" ]; then
     godot_args="${godot_args} --export-debug ${PLATFORM} ${localTargetDirDebug}/${EXECNAME}"
     ziping="zip -0 -r export-artifacts/export-with-debug-symbols-${zippostfix}.zip ${targetDirDebug};"
@@ -62,19 +62,17 @@ if [ "${PACK}x" != "x" ] && [ "${PACK}x" != "falsex" ]; then
 fi
 
 if [ "${PLATFORM_EXPORT}x" != "x" ] && [ "${PLATFORM_EXPORT}x" != "falsex" ]; then
-    godot_args="${godot_args} --export ${PLATFORM} ${targetDirPlatform}/${EXECNAME}"
+    godot_args="${godot_args} --export ${PLATFORM} ${localTargetDirPlatform}/${EXECNAME}"
     ziping="zip -0 -r export-artifacts/export-${zippostfix}.zip ${targetDirPlatform};"
 fi
 echo "::endgroup::"
 
+godot_args="${godot_args} --no-window ${targetDir}/project.godot --quit"
 execs=(./Godot*)
 
 chmod +x "${execs[0]}"
 echo "::group::running the engine with following parameters: ${godot_args}"
-"${execs[0]}" "${godot_args}" --no-window "${targetDir}"/project.godot --quit 2>&1 | tee export-artifacts/engine-output.log
-echo "::endgroup::"
-echo "::group::showing engine log..."
-cat export-artifacts/engine-output.log
+"${execs[0]}" ${godot_args} 2>&1 | tee export-artifacts/engine-output.log
 echo "::endgroup::"
 echo "::group::ziping projects..."
 ${ziping}
