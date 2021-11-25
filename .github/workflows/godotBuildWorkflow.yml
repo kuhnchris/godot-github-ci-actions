@@ -220,21 +220,25 @@ jobs:
     steps:
     - name: Retrieve saved data (linux)
       uses: actions/download-artifact@v2
+      continue-on-error: true
       with:
         name: build-linux
         path: ./export-artifacts/
     - name: Retrieve saved data (mac)
       uses: actions/download-artifact@v2
+      continue-on-error: true
       with:
         name: build-mac
         path: ./export-artifacts/
     - name: Retrieve saved data (win)
       uses: actions/download-artifact@v2
+      continue-on-error: true
       with:
         name: build-win
         path: ./export-artifacts/
     - name: Retrieve saved data (android)
       uses: actions/download-artifact@v2
+      continue-on-error: true
       with:
         name: build-android
         path: ./export-artifacts/

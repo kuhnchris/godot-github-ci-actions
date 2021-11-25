@@ -56,30 +56,30 @@ mkdir -pv "${targetDirPlatform}"
 echo "::endgroup::"
 
 echo "::group::Evaluating input variables..."
-godot_args=""
+godot_args=()
 ziping=""
 zippostfix="$(date "+automated_build-%Y.%m.%d-%H%M%S")-$GITHUB_SHA"
 if [ "${DEBUG}x" != "x" ] && [ "${DEBUG}x" != "falsex" ]; then
-    godot_args="${godot_args} --export-debug \"${PLATFORM}\" ${localTargetDirDebug}/${EXECNAME}"
+    godot_args+=("--export-debug"  "${PLATFORM}" "${localTargetDirDebug}/${EXECNAME}")
     ziping="zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-with-debug-symbols-${zippostfix}.zip\" ${targetDirDebug} ;"
 fi
 
 if [ "${PACK}x" != "x" ] && [ "${PACK}x" != "falsex" ]; then
-    godot_args="${godot_args} --export-pack \"${PLATFORM}\" ${localTargetDirPck}/${EXECNAME}"
+    godot_args+=("--export-pack" "${PLATFORM}" "${localTargetDirPck}/${EXECNAME}")
     ziping="${ziping}zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-pack-${zippostfix}.zip\" ${targetDirPck} ;"
 fi
 
 if [ "${PLATFORM_EXPORT}x" != "x" ] && [ "${PLATFORM_EXPORT}x" != "falsex" ]; then
-    godot_args="${godot_args} --export \"${PLATFORM}\" ${localTargetDirPlatform}/${EXECNAME}"
+    godot_args+=("--export" "${PLATFORM}" "${localTargetDirPlatform}/${EXECNAME}")
     ziping="${ziping}zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-${zippostfix}.zip\" ${targetDirPlatform} ;"
 fi
 echo "::endgroup::"
 
-godot_args="${godot_args} --no-window ${targetDir}/project.godot --quit"
+godot_args+=("--no-window" "${targetDir}/project.godot" "--quit")
 execs=(/usr/bin/godot)
 chmod +x "${execs[0]}"
-echo "::group::running the engine with following parameters: ${godot_args}"
-"${execs[0]}" ${godot_args} 2>&1 | tee "export-artifacts/engine-output-${sanitizePlatform}.log"
+echo "::group::running the engine with following parameters: ${godot_args[*]}"
+"${execs[0]}" ${godot_args[*]} 2>&1 | tee "export-artifacts/engine-output-${sanitizePlatform}.log"
 echo "::endgroup::"
 echo "::group::ziping projects..."
 eval "${ziping}";
