@@ -34,6 +34,8 @@ localTargetDirPlatform=${localExportDirBase}/export-platform
 targetDirDebug=${targetDir}/${localTargetDirDebug}/
 targetDirPck=${targetDir}/${localTargetDirPck}/
 targetDirPlatform=${targetDir}/${localTargetDirPlatform}/
+projectFile=${targetDir}/project.godot
+logfile="export-artifacts/engine-output-${sanitizePlatform}.log"
 
 echo "::endgroup::"
 
@@ -56,21 +58,22 @@ mkdir ./export-artifacts
 echo "::endgroup::"
 
 echo "::group::Evaluating input variables..."
-godot_args=("--no-window" "${targetDir}/project.godot" "--quit")
+sed "s/name=\"$PLATFORM\"/name=\"${sanitizePlatform}\"/g" -i "$projectFile" 
+godot_args=("--no-window" "${projectFile}" "--quit")
 ziping=""
 zippostfix="$(date "+automated_build-%Y.%m.%d-%H%M%S")-$GITHUB_SHA"
 if [ "${DEBUG}x" != "x" ] && [ "${DEBUG}x" != "falsex" ]; then
-    godot_args+=("--export-debug" "${PLATFORM}" "${localTargetDirDebug}/${EXECNAME}")
+    godot_args+=("--export-debug" "${sanitizePlatform}" "${localTargetDirDebug}/${EXECNAME}")
     ziping="zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-with-debug-symbols-${zippostfix}.zip\" ${targetDirDebug} ;"
 fi
 
 if [ "${PACK}x" != "x" ] && [ "${PACK}x" != "falsex" ]; then
-    godot_args+=("--export-pack" "${PLATFORM}" "${localTargetDirPck}/${EXECNAME}")
+    godot_args+=("--export-pack" "${sanitizePlatform}" "${localTargetDirPck}/${EXECNAME}")
     ziping="${ziping}zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-pack-${zippostfix}.zip\" ${targetDirPck} ;"
 fi
 
 if [ "${PLATFORM_EXPORT}x" != "x" ] && [ "${PLATFORM_EXPORT}x" != "falsex" ]; then
-    godot_args+=("--export" "${PLATFORM}" "${localTargetDirPlatform}/${EXECNAME}")
+    godot_args+=("--export" "${sanitizePlatform}" "${localTargetDirPlatform}/${EXECNAME}")
     ziping="${ziping}zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-${zippostfix}.zip\" ${targetDirPlatform} ;"
 fi
 echo "::endgroup::"
@@ -78,7 +81,7 @@ echo "::endgroup::"
 execs=(/usr/bin/godot)
 chmod +x "${execs[0]}"
 echo "::group::running the engine with following parameters: ${godot_args[*]}"
-eval "${execs[0]}" ${godot_args[*]} > "export-artifacts/engine-output-${sanitizePlatform}.log" 2>&1 
+eval "${execs[0]}" ${godot_args[*]} > "${logfile}" 2>&1 
 echo "::endgroup::"
 echo "::group::ziping projects..."
 eval "${ziping}" 2>&1 
