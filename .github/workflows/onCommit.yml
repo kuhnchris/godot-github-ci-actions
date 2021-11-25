@@ -19,7 +19,7 @@ jobs:
       name: Check for existing docker image...
       run: |
         result=`docker manifest inspect ghcr.io/${{ github.repository_owner }}/${{ env.REPO_NAME }}:${{ env.GODOT_VERSION }}; echo $?`
-        echo ::set-output name=imageExists:${result}
+        echo ::set-output name=imageExists:${result}::
         if [ "${result}" == "0" ]; then
           echo "image exists. skipping build..."
         else
@@ -60,6 +60,9 @@ jobs:
       id: dockerfileEnrichment
       run: |
         sed 's/GODOT_VERSION/'${{ env.GODOT_VERSION }}'/g' -i ./main/.github/actions/exportGodotProject/Dockerfile
+
+    - name: Log in to registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Build release
       id: exportGodot
