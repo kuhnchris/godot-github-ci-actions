@@ -6,7 +6,7 @@ inputs:
     required: true
     default: '3.4'
 runs:
- using: "composite"
+  using: "composite"
   steps:
     - run: ${{ github.action_path }}/entrypoint.sh
       with:
