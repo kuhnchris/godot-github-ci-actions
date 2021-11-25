@@ -52,7 +52,7 @@ jobs:
 
   buildX11:
     needs: checkDockerImage
-    name: Build project (X11)
+    name: Build project (linux)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -81,7 +81,7 @@ jobs:
     - name: Temporarily save data
       uses: actions/upload-artifact@v2
       with:
-        name: build-x11
+        name: build-linux
         path: ./export-artifacts/
         retention-days: 1          
           
