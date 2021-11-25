@@ -59,17 +59,17 @@ ziping=""
 zippostfix="$(date "+automated_build-%Y.%m.%d-%H%M%S")-$GITHUB_SHA"
 if [ "${DEBUG}x" != "x" ] && [ "${DEBUG}x" != "falsex" ]; then
     godot_args="${godot_args} --export-debug ${PLATFORM} ${localTargetDirDebug}/${EXECNAME}"
-    ziping="zip -0 -r export-artifacts/export-with-debug-symbols-${zippostfix}.zip ${targetDirDebug} ;"
+    ziping="zip -0 -r \"export-artifacts/${PLATFORM}-export-with-debug-symbols-${zippostfix}.zip\" ${targetDirDebug} ;"
 fi
 
 if [ "${PACK}x" != "x" ] && [ "${PACK}x" != "falsex" ]; then
     godot_args="${godot_args} --export-pack ${PLATFORM} ${localTargetDirPck}/${EXECNAME}"
-    ziping="${ziping}zip -0 -r export-artifacts/export-pack-${zippostfix}.zip ${targetDirPck} ;"
+    ziping="${ziping}zip -0 -r \"export-artifacts/${PLATFORM}-export-pack-${zippostfix}.zip\" ${targetDirPck} ;"
 fi
 
 if [ "${PLATFORM_EXPORT}x" != "x" ] && [ "${PLATFORM_EXPORT}x" != "falsex" ]; then
     godot_args="${godot_args} --export ${PLATFORM} ${localTargetDirPlatform}/${EXECNAME}"
-    ziping="${ziping}zip -0 -r export-artifacts/export-${zippostfix}.zip ${targetDirPlatform} ;"
+    ziping="${ziping}zip -0 -r \"export-artifacts/${PLATFORM}-export-${zippostfix}.zip\" ${targetDirPlatform} ;"
 fi
 echo "::endgroup::"
 
