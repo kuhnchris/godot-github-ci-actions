@@ -74,7 +74,8 @@ jobs:
         project-directory: "./example-project"
         export-debug: false
         export-pack: false
-        export-platform: "Linux/X11"
+        export-platform: true
+        platform: "Linux/X11"
         executable-name: "example-project"
 
     - name: Release
@@ -112,7 +113,8 @@ jobs:
         project-directory: "./example-project"
         export-debug: false
         export-pack: false
-        export-platform: "Mac OSX"
+        export-platform: true
+        platform: "Mac OSX"
         executable-name: "example-project.macosx"
 
     - name: Release
@@ -150,7 +152,8 @@ jobs:
         project-directory: "./example-project"
         export-debug: false
         export-pack: false
-        export-platform: "Windows Desktop"
+        export-platform: true
+        platform: "Windows Desktop"
         executable-name: "example-project.exe"
 
     - name: Release
@@ -188,7 +191,8 @@ jobs:
         project-directory: "./example-project"
         export-debug: false
         export-pack: false
-        export-platform: "Android"
+        export-platform: true
+        platform: "Android"
         executable-name: "example-project.apk"
 
     - name: Release
