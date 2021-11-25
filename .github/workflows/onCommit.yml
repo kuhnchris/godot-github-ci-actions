@@ -26,6 +26,13 @@ jobs:
           echo "image does not exist - building..."
         fi
 
+    - uses: actions/checkout@v2
+      if: steps.checkForImage.outputs.imageExists != 0
+      with:
+        ref: main
+        path: main
+        token: ${{ secrets.MY_TOKEN || github.token }}
+
     - id: buildImage
       name: Building docker image...
       if: steps.checkForImage.outputs.imageExists != 0
