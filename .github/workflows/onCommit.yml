@@ -49,7 +49,7 @@ jobs:
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         docker tag $REPO_NAME $IMAGE_ID:${{ env.GODOT_VERSION }}
         docker push $IMAGE_ID:${{ env.GODOT_VERSION }}
-        
+
   buildX11:
     needs: checkDockerImage
     name: Build project (X11)
@@ -76,6 +76,116 @@ jobs:
         export-pack: false
         export-platform: "Linux/X11"
         executable-name: "example-project"
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      #if: startsWith(github.ref, 'refs/tags/')
+      with:
+        body: |
+          This is an automated build for GitHub SHA ${{ github.sha }}
+        tag_name: latest-dev
+        files: |
+          ./export-artifacts/*
+
+  buildMac:
+    needs: checkDockerImage
+    name: Build project (MacOS)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.MY_TOKEN || github.token }}
+
+    - name: Modify GODOT_VERSION in Dockerfile...
+      id: dockerfileEnrichment
+      run: |
+        sed 's/GODOT_VERSION/'${{ env.GODOT_VERSION }}'/g' -i ./.github/actions/exportGodotProject/Dockerfile
+
+    - name: Log in to registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Build release
+      id: exportGodot
+      uses: ./.github/actions/exportGodotProject
+      with:
+        project-directory: "./example-project"
+        export-debug: false
+        export-pack: false
+        export-platform: "Mac OSX"
+        executable-name: "example-project.macosx"
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      #if: startsWith(github.ref, 'refs/tags/')
+      with:
+        body: |
+          This is an automated build for GitHub SHA ${{ github.sha }}
+        tag_name: latest-dev
+        files: |
+          ./export-artifacts/*
+
+  buildWin:
+    needs: checkDockerImage
+    name: Build project (Windows)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.MY_TOKEN || github.token }}
+
+    - name: Modify GODOT_VERSION in Dockerfile...
+      id: dockerfileEnrichment
+      run: |
+        sed 's/GODOT_VERSION/'${{ env.GODOT_VERSION }}'/g' -i ./.github/actions/exportGodotProject/Dockerfile
+
+    - name: Log in to registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Build release
+      id: exportGodot
+      uses: ./.github/actions/exportGodotProject
+      with:
+        project-directory: "./example-project"
+        export-debug: false
+        export-pack: false
+        export-platform: "Windows Desktop"
+        executable-name: "example-project.exe"
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      #if: startsWith(github.ref, 'refs/tags/')
+      with:
+        body: |
+          This is an automated build for GitHub SHA ${{ github.sha }}
+        tag_name: latest-dev
+        files: |
+          ./export-artifacts/*
+
+  buildAndroid:
+    name: Build project (Android)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.MY_TOKEN || github.token }}
+
+    - name: Modify GODOT_VERSION in Dockerfile...
+      id: dockerfileEnrichment
+      run: |
+        sed 's/GODOT_VERSION/'${{ env.GODOT_VERSION }}'/g' -i ./.github/actions/exportGodotProject/Dockerfile
+
+    - name: Log in to registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Build release
+      id: exportGodot
+      uses: ./.github/actions/exportGodotProject
+      with:
+        project-directory: "./example-project"
+        export-debug: false
+        export-pack: false
+        export-platform: "Android"
+        executable-name: "example-project.apk"
 
     - name: Release
       uses: softprops/action-gh-release@v1
