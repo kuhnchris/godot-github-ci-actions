@@ -79,7 +79,7 @@ godot_args+=("--no-window" "${targetDir}/project.godot" "--quit")
 execs=(/usr/bin/godot)
 chmod +x "${execs[0]}"
 echo "::group::running the engine with following parameters: ${godot_args[*]}"
-"${execs[0]}" "${godot_args[*]}" > "export-artifacts/engine-output-${sanitizePlatform}.log" 2>&1 
+"${execs[0]}" ${godot_args[*]} > "export-artifacts/engine-output-${sanitizePlatform}.log" 2>&1 
 echo "::endgroup::"
 echo "::group::ziping projects..."
 eval "${ziping}";
