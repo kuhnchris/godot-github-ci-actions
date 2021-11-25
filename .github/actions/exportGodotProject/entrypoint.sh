@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -v -x
+set -v -x
 echo "::group::Debugging information:"
 echo "workdir:"
 pwd
@@ -20,7 +20,7 @@ BASE_DIR=$1
 DEBUG=$2
 PACK=$3
 PLATFORM_EXPORT=$4
-PLATFORM=$5
+PLATFORM="$5"
 EXECNAME=$6
 if [ "${BASE_DIR}x" != "x" ] && [ "$BASE_DIR" != "false" ]; then
     targetDir="${GITHUB_WORKSPACE}/${BASE_DIR}/"
@@ -56,7 +56,7 @@ mkdir ./export-artifacts
 echo "::endgroup::"
 
 echo "::group::Evaluating input variables..."
-godot_args=()
+godot_args=("--no-window" "${targetDir}/project.godot" "--quit")
 ziping=""
 zippostfix="$(date "+automated_build-%Y.%m.%d-%H%M%S")-$GITHUB_SHA"
 if [ "${DEBUG}x" != "x" ] && [ "${DEBUG}x" != "falsex" ]; then
@@ -75,7 +75,6 @@ if [ "${PLATFORM_EXPORT}x" != "x" ] && [ "${PLATFORM_EXPORT}x" != "falsex" ]; th
 fi
 echo "::endgroup::"
 
-godot_args+=("--no-window" "${targetDir}/project.godot" "--quit")
 execs=(/usr/bin/godot)
 chmod +x "${execs[0]}"
 echo "::group::running the engine with following parameters: ${godot_args[*]}"
@@ -84,4 +83,4 @@ echo "::endgroup::"
 echo "::group::ziping projects..."
 eval "${ziping}";
 echo "::endgroup::"
-#set +v +x
+set +v +x
