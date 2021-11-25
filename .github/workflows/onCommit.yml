@@ -18,7 +18,7 @@ jobs:
     - id: checkForImage
       name: Check for existing docker image...
       run: |
-        result=`docker manifest inspect ghcr.io/${{ github.repository_owner }}/${{ REPO_NAME }}:${{ GODOT_VERSION }}; echo $?`
+        result=`docker manifest inspect ghcr.io/${{ github.repository_owner }}/${{ env.REPO_NAME }}:${{ env.GODOT_VERSION }}; echo $?`
         echo ::set-output name=imageExists:${result}
         if [ ${result} == "0" ];
           echo "image exists. skipping build..."
@@ -31,7 +31,7 @@ jobs:
       if: steps.checkForImage.output.imageExists != 0
       uses: ./main/.github/actions/buildGodotTemplateContainer
       with:
-        godot-version: ${{ GODOT_VERSION }}
+        godot-version: ${{ env.GODOT_VERSION }}
 
     - name: Log in to registry
       if: steps.checkForImage.output.imageExists != 0
@@ -40,9 +40,9 @@ jobs:
     - name: Push image
       if: steps.checkForImage.output.imageExists != 0
       run: |
-        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/${{ REPO_NAME }}
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/${{ env.REPO_NAME }}
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-        docker tag $REPO_NAME $IMAGE_ID:${{ GODOT_VERSION }}
+        docker tag $REPO_NAME $IMAGE_ID:${{ env.GODOT_VERSION }}
         docker push $IMAGE_ID:$VERSION
 
   buildX11:
@@ -59,7 +59,7 @@ jobs:
     - name: Modify GODOT_VERSION in Dockerfile...
       id: dockerfileEnrichment
       run: |
-        sed 's/${{ GODOT_VERSION }}/'${{ GODOT_VERSION }}'/g' -i ./main/.github/actions/exportGodotProject/Dockerfile
+        sed 's/${{ GODOT_VERSION }}/'${{ env.GODOT_VERSION }}'/g' -i ./main/.github/actions/exportGodotProject/Dockerfile
 
     - name: Build release
       id: exportGodot
