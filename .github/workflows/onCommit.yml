@@ -20,7 +20,7 @@ jobs:
       run: |
         result=`docker manifest inspect ghcr.io/${{ github.repository_owner }}/${{ env.REPO_NAME }}:${{ env.GODOT_VERSION }}; echo $?`
         echo ::set-output name=imageExists:${result}
-        if [ ${result} == "0" ];
+        if [ "${result}" == "0" ]; then
           echo "image exists. skipping build..."
         else
           echo "image does not exist - building..."
