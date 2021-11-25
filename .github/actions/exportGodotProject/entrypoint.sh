@@ -35,6 +35,7 @@ targetDirDebug=${targetDir}/${localTargetDirDebug}/
 targetDirPck=${targetDir}/${localTargetDirPck}/
 targetDirPlatform=${targetDir}/${localTargetDirPlatform}/
 projectFile=${targetDir}/project.godot
+exportPresetFile=${targetDir}/export_presets.cfg
 logfile="export-artifacts/engine-output-${sanitizePlatform}.log"
 
 echo "::endgroup::"
@@ -58,7 +59,7 @@ mkdir ./export-artifacts
 echo "::endgroup::"
 
 echo "::group::Evaluating input variables..."
-sed "s/name=\"$PLATFORM\"/name=\"${sanitizePlatform}\"/g" -i "$projectFile" 
+sed "s[name=\"$PLATFORM\"[name=\"${sanitizePlatform}\"[g" -i "${exportPresetFile}" 
 godot_args=("--no-window" "${projectFile}" "--quit")
 ziping=""
 zippostfix="$(date "+automated_build-%Y.%m.%d-%H%M%S")-$GITHUB_SHA"
