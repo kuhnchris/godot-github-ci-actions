@@ -29,14 +29,12 @@ jobs:
     - uses: actions/checkout@v2
       if: steps.checkForImage.outputs.imageExists != 0
       with:
-        ref: main
-        path: main
         token: ${{ secrets.MY_TOKEN || github.token }}
 
     - id: buildImage
       name: Building docker image...
       if: steps.checkForImage.outputs.imageExists != 0
-      uses: ./main/.github/actions/buildGodotTemplateContainer
+      uses: ./.github/actions/buildGodotTemplateContainer
       with:
         godot-version: ${{ env.GODOT_VERSION }}
 
@@ -59,23 +57,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: main
-        path: main
         token: ${{ secrets.MY_TOKEN || github.token }}
 
     - name: Modify GODOT_VERSION in Dockerfile...
       id: dockerfileEnrichment
       run: |
-        sed 's/GODOT_VERSION/'${{ env.GODOT_VERSION }}'/g' -i ./main/.github/actions/exportGodotProject/Dockerfile
+        sed 's/GODOT_VERSION/'${{ env.GODOT_VERSION }}'/g' -i ./.github/actions/exportGodotProject/Dockerfile
 
     - name: Log in to registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Build release
       id: exportGodot
-      uses: ./main/.github/actions/exportGodotProject
+      uses: ./.github/actions/exportGodotProject
       with:
-        project-directory: "./main/example-project"
+        project-directory: "./example-project"
         export-debug: false
         export-pack: false
         export-platform: "Linux/X11"

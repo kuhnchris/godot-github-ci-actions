@@ -6,7 +6,12 @@ inputs:
     required: true
     default: '3.4'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.godot-version }}
+ using: "composite"
+  steps:
+    - run: ${{ github.action_path }}/entrypoint.sh
+      with:
+        GODOT_VERSION: ${{ inputs.godot-version }}
+#  using: 'docker'
+#  image: 'Dockerfile'
+#  args:
+#    - ${{ inputs.godot-version }}
