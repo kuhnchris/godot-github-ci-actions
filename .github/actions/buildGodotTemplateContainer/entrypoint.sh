@@ -2,7 +2,7 @@
 #set -v -x
 TAG=godot-github-ci-actions
 #GODOT_VERSION=$1
-GODOT_VERSION=INPUT_GODOT_VERSION
+#GODOT_VERSION=INPUT_GODOT_VERSION
 
 sed 's/\$1/'${GODOT_VERSION}'/g' -i fetchGodot/entrypoint.sh
 
