@@ -27,19 +27,24 @@ if [ "${BASE_DIR}x" != "x" ] && [ "$BASE_DIR" != "false" ]; then
     echo "Using this project directory: ${targetDir}"
 fi
 
-targetDirDebug=${targetDir}/export-debug/
-targetDirPck=${targetDir}/export-pck/
-targetDirPlatform=${targetDir}/export-platform/
+localExportDirBase=.ci-exports/
+localTargetDirDebug=${localExportDirBase}/export-debug
+localTargetDirPck=${localExportDirBase}/export-pck
+localTargetDirPlatform=${localExportDirBase}/export-platform
+targetDirDebug=${targetDir}/${localTargetDirDebug}/
+targetDirPck=${targetDir}/${localTargetDirPck}/
+targetDirPlatform=${targetDir}/${localTargetDirPlatform}/
 echo "::endgroup::"
 
 echo "::group::Cleaning and preparing export directories..."
 rm -Rf "${targetDirDebug}" 2>&1 || true
-mkdir "${targetDirDebug}"
+mkdir -p "${targetDirDebug}"
 rm -Rf "${targetDirPck}" 2>&1 || true
-mkdir "${targetDirPck}"
+mkdir -p "${targetDirPck}"
 rm -Rf "${targetDirPlatform}" 2>&1 || true
-mkdir "${targetDirPlatform}"
+mkdir -p "${targetDirPlatform}"
 rm -Rf ./export-artifacts 2>&1 || true
+mkdir ./export-artifacts
 echo "::endgroup::"
 
 echo "::group::Evaluating input variables..."
@@ -47,12 +52,12 @@ godot_args=""
 ziping=""
 zippostfix="$(date "+automated_build-%Y.%m.%d-%H:%M:%S")-$GITHUB_REF"
 if [ "${DEBUG}x" != "x" ] && [ "${DEBUG}x" != "falsex" ]; then
-    godot_args="${godot_args} --export-debug ${PLATFORM} ${targetDirDebug}/${EXECNAME}"
+    godot_args="${godot_args} --export-debug ${PLATFORM} ${localTargetDirDebug}/${EXECNAME}"
     ziping="zip -0 -r export-artifacts/export-with-debug-symbols-${zippostfix}.zip ${targetDirDebug};"
 fi
 
 if [ "${PACK}x" != "x" ] && [ "${PACK}x" != "falsex" ]; then
-    godot_args="${godot_args} --export-pack ${PLATFORM} ${targetDirPck}/${EXECNAME}"
+    godot_args="${godot_args} --export-pack ${PLATFORM} ${localTargetDirPck}/${EXECNAME}"
     ziping="zip -0 -r export-artifacts/export-pack-${zippostfix}.zip ${targetDirPck};"
 fi
 
@@ -66,7 +71,11 @@ execs=(./Godot*)
 
 chmod +x "${execs[0]}"
 echo "::group::running the engine with following parameters: ${godot_args}"
-"${execs[0]}" "${godot_args}" --no-window "${targetDir}"/project.godot --quit
+"${execs[0]}" "${godot_args}" --no-window "${targetDir}"/project.godot --quit 2>&1 | tee export-artifacts/engine-output.log
+echo "::endgroup::"
+echo "::group::showing engine log..."
+cat export-artifacts/engine-output.log
+echo "::endgroup::"
 echo "::group::ziping projects..."
 ${ziping}
 echo "::endgroup::"
