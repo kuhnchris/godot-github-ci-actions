@@ -9,6 +9,7 @@ runs:
   using: "composite"
   steps:
     - run: ${{ github.action_path }}/entrypoint.sh
+      shell: bash
       with:
         GODOT_VERSION: ${{ inputs.godot-version }}
 #  using: 'docker'
