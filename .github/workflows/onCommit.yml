@@ -58,7 +58,7 @@ jobs:
 
     - name: Modify GODOT_VERSION in Dockerfile...
       id: dockerfileEnrichment
-      runs: |
+      run: |
         sed 's/${{ GODOT_VERSION }}/'${{ GODOT_VERSION }}'/g' -i ./main/.github/actions/exportGodotProject/Dockerfile
 
     - name: Build release
