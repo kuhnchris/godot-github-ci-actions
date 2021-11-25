@@ -17,7 +17,7 @@ jobs:
     steps:
     - id: checkForImage
       name: Check for existing docker image...
-      runs: |
+      run: |
         result=`docker manifest inspect ghcr.io/${{ github.repository_owner }}/${{ REPO_NAME }}:${{ GODOT_VERSION }}; echo $?`
         echo ::set-output name=imageExists:${result}
         if [ ${result} == "0" ];
