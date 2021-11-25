@@ -26,32 +26,33 @@ if [ "${BASE_DIR}x" != "x" ] && [ "$BASE_DIR" != "false" ]; then
     targetDir="${GITHUB_WORKSPACE}/${BASE_DIR}/"
     echo "Using this project directory: ${targetDir}"
 fi
-localExportDirBase=.ci-exports/
+sanitizePlatform=$(echo "${PLATFORM}" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+localExportDirBase=.ci-exports/${sanitizePlatform}/
 localTargetDirDebug=${localExportDirBase}/export-debug
 localTargetDirPck=${localExportDirBase}/export-pck
 localTargetDirPlatform=${localExportDirBase}/export-platform
 targetDirDebug=${targetDir}/${localTargetDirDebug}/
 targetDirPck=${targetDir}/${localTargetDirPck}/
 targetDirPlatform=${targetDir}/${localTargetDirPlatform}/
-sanitizePlatform=$(echo "${PLATFORM}" | sed -e 's/[^A-Za-z0-9._-]/_/g')
+
 echo "::endgroup::"
 
 
 echo "::group::Linking template directory to proper directory"
 sharedir=~/.local/share/
-mkdir -p ${sharedir}
-ln -s /usr/share/godot ${sharedir}/godot
+mkdir -pv ${sharedir}
+ln -sv /usr/share/godot ${sharedir}/godot
 echo "::endgroup::"
 
 echo "::group::Cleaning and preparing export directories..."
-rm -Rf "${targetDirDebug}" 2>&1 || true
-mkdir -p "${targetDirDebug}"
-rm -Rf "${targetDirPck}" 2>&1 || true
-mkdir -p "${targetDirPck}"
-rm -Rf "${targetDirPlatform}" 2>&1 || true
-mkdir -p "${targetDirPlatform}"
-rm -Rf ./export-artifacts 2>&1 || true
-mkdir ./export-artifacts
+rm -Rfv "${targetDirDebug}" 2>&1 || true
+mkdir -pv "${targetDirDebug}"
+rm -Rfv "${targetDirPck}" 2>&1 || true
+mkdir -pv "${targetDirPck}"
+rm -Rfv "${targetDirPlatform}" 2>&1 || true
+mkdir -pv "${targetDirPlatform}"
+#rm -Rf ./export-artifacts 2>&1 || true
+#mkdir ./export-artifacts
 echo "::endgroup::"
 
 echo "::group::Evaluating input variables..."
@@ -59,18 +60,18 @@ godot_args=""
 ziping=""
 zippostfix="$(date "+automated_build-%Y.%m.%d-%H%M%S")-$GITHUB_SHA"
 if [ "${DEBUG}x" != "x" ] && [ "${DEBUG}x" != "falsex" ]; then
-    godot_args="${godot_args} --export-debug ${PLATFORM} ${localTargetDirDebug}/${EXECNAME}"
-    ziping="zip -0 -r \"export-artifacts/${sanitizePlatform}-export-with-debug-symbols-${zippostfix}.zip\" ${targetDirDebug} ;"
+    godot_args="${godot_args} --export-debug \"${PLATFORM}\" ${localTargetDirDebug}/${EXECNAME}"
+    ziping="zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-with-debug-symbols-${zippostfix}.zip\" ${targetDirDebug} ;"
 fi
 
 if [ "${PACK}x" != "x" ] && [ "${PACK}x" != "falsex" ]; then
-    godot_args="${godot_args} --export-pack ${PLATFORM} ${localTargetDirPck}/${EXECNAME}"
-    ziping="${ziping}zip -0 -r \"export-artifacts/${sanitizePlatform}-export-pack-${zippostfix}.zip\" ${targetDirPck} ;"
+    godot_args="${godot_args} --export-pack \"${PLATFORM}\" ${localTargetDirPck}/${EXECNAME}"
+    ziping="${ziping}zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-pack-${zippostfix}.zip\" ${targetDirPck} ;"
 fi
 
 if [ "${PLATFORM_EXPORT}x" != "x" ] && [ "${PLATFORM_EXPORT}x" != "falsex" ]; then
-    godot_args="${godot_args} --export ${PLATFORM} ${localTargetDirPlatform}/${EXECNAME}"
-    ziping="${ziping}zip -0 -r \"export-artifacts/${sanitizePlatform}-export-${zippostfix}.zip\" ${targetDirPlatform} ;"
+    godot_args="${godot_args} --export \"${PLATFORM}\" ${localTargetDirPlatform}/${EXECNAME}"
+    ziping="${ziping}zip -0 -r -D \"export-artifacts/build-${sanitizePlatform}-export-${zippostfix}.zip\" ${targetDirPlatform} ;"
 fi
 echo "::endgroup::"
 
