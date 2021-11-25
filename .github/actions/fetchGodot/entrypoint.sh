@@ -6,19 +6,19 @@ TEMPLATE_BASE=~/.local/share/godot/templates
 TEMPLATE_TARGET=${TEMPLATE_BASE}/${GODOT_VERSION}.stable
 URL_PREFIX=https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_
 echo "::debug::running with parameters: $GITHUB_WORKSPACE - $GODOT_VERSION" 
-if [ "$GODOT_VERSION" == "" ]; then
+if [ "$GODOT_VERSION" = "" ]; then
     echo "no Godot Version defined. cannot proceed."
     exit 2
 fi  
-cd ${targetDir};
+cd "${targetDir}" || exit 2;
 
 echo "::group::using this url prefix: ${URL_PREFIX}"
 echo "::endgroup::"
 echo "::group::downloading templates... export_templates.tpz"
-wget ${URL_PREFIX}export_templates.tpz -O templ.tpz
+wget "${URL_PREFIX}"export_templates.tpz -O templ.tpz
 echo "::endgroup::"
 echo "::group::downloading engine... x11.64.zip"
-wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip -O app.zip
+wget https://downloads.tuxfamily.org/godotengine/"${GODOT_VERSION}"/Godot_v"${GODOT_VERSION}"-stable_linux_headless.64.zip -O app.zip
 echo "::endgroup::"
 echo "::group::unzipping engine zip file..."
 unzip app.zip
