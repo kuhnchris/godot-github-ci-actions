@@ -28,17 +28,17 @@ jobs:
 
     - id: buildImage
       name: Building docker image...
-      if: steps.checkForImage.output.imageExists != 0
+      if: steps.checkForImage.outputs.imageExists != 0
       uses: ./main/.github/actions/buildGodotTemplateContainer
       with:
         godot-version: ${{ env.GODOT_VERSION }}
 
     - name: Log in to registry
-      if: steps.checkForImage.output.imageExists != 0
+      if: steps.checkForImage.outputs.imageExists != 0
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Push image
-      if: steps.checkForImage.output.imageExists != 0
+      if: steps.checkForImage.outputs.imageExists != 0
       run: |
         IMAGE_ID=ghcr.io/${{ github.repository_owner }}/${{ env.REPO_NAME }}
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
