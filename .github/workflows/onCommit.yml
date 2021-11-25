@@ -30,7 +30,7 @@ jobs:
         export-debug: false
         export-pack: false
         export-platform: "Linux/X11"
-
+        executable-name: "example-project"
     - name: Release
       uses: softprops/action-gh-release@v1
       #if: startsWith(github.ref, 'refs/tags/')

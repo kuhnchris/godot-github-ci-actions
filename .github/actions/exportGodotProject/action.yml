@@ -21,6 +21,10 @@ inputs:
     description: "Platform to export for (from export_presets.cfg)"
     required: true
     default: "Linux/X11"
+  executable-name:
+    description: "Name of executable (for windows append '.exe')"
+    required: true
+    default: "game"
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -30,3 +34,4 @@ runs:
     - ${{ inputs.export-pack }}
     - ${{ inputs.export-platform }}
     - ${{ inputs.platform }}
+    - ${{ inputs.executable-name }}

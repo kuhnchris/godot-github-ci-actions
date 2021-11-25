@@ -11,6 +11,7 @@ config_version=4
 [application]
 
 config/name="Example-project"
+run/main_scene="res://Example.tscn"
 config/icon="res://icon.png"
 
 [physics]

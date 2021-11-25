@@ -1,2 +1,4 @@
 secrets.env
 .secrets
+example-project/.import
+example-project/build
